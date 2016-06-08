@@ -1,15 +1,24 @@
 <package>
   <name>rqt_py_trees</name>
   <version>0.0.1</version>
-  <description>rqt_py_trees provides a GUI plugin for visualizing py_trees behaviour trees. Based on rqt_tf_tree.</description>
+  <description>
+    rqt_py_trees provides a GUI plugin for visualizing py_trees behaviour trees based on rqt_tf_tree.
+  </description>
+
+  <maintainer email="m.staniaszek@gmail.com">Michal Staniaszek</maintainer>
+  <maintainer email="stonier@yujinrobot.com">Daniel Stonier</maintainer>
+  <maintainer email="naveedhd@gmail.com">Naveed Usmani</maintainer>
+
+  <license>BSD</license>  
+
+  <url type="website">http://ros.org/wiki/rqt_py_trees</url>
+  <url type="repository">https://github.com/stonier/rqt_py_trees</url>
+  <url type="bugtracker">https://github.com/stonier/rqt_py_trees/issues</url>
+
   <author>Thibault Kruse</author>
   <author>Michal Staniaszek</author>
-  <maintainer email="m.staniaszek@gmail.com">Michal Staniaszek</maintainer>
-
-  <license>BSD</license>
-
-  <url type="repository">https://github.com/ros-visualization/rqt_robot_plugins</url>
-  <url type="bugtracker">https://github.com/ros-visualization/rqt_robot_plugins/issues</url>
+  <author>Daniel Stonier</author>
+  <author>Naveed Usmani</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>py_trees</build_depend>
