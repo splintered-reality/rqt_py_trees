@@ -9,7 +9,7 @@
   <maintainer email="stonier@yujinrobot.com">Daniel Stonier</maintainer>
   <maintainer email="naveedhd@gmail.com">Naveed Usmani</maintainer>
 
-  <license>MIT</license>  
+  <license>BSD</license>  
 
   <url type="website">http://ros.org/wiki/rqt_py_trees</url>
   <url type="repository">https://github.com/stonier/rqt_py_trees</url>
