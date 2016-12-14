@@ -63,36 +63,16 @@ class NodeItem(GraphItem):
                                          QPointF(rect[0] + 3*rect[2]/10,   rect[1])])
             self._graphics_item = QGraphicsPolygonItem(octagon_polygon)
 
-        # TODO: doubleoctagon to be replaced by any other polygon with single shape
-        # cause of hover effects and additinal code etc.
-
-        elif shape == 'doubleoctagon':
+        elif shape == 'hexagon':
             rect = bounding_box.getRect()
-            octagon_polygon = QPolygonF([QPointF(rect[0],               rect[1] + 3*rect[3]/10),
-                                         QPointF(rect[0],               rect[1] + 7*rect[3]/10),
-                                         QPointF(rect[0] + 3*rect[2]/10,   rect[1] + rect[3]),
-                                         QPointF(rect[0] + 7*rect[2]/10, rect[1] + rect[3]),
-                                         QPointF(rect[0] + rect[2],     rect[1] + 7*rect[3]/10),
-                                         QPointF(rect[0] + rect[2],     rect[1] + 3*rect[3]/10),
-                                         QPointF(rect[0] + 7*rect[2]/10, rect[1]),
-                                         QPointF(rect[0] + 3*rect[2]/10,   rect[1])])
-            self._graphics_item = QGraphicsPolygonItem(octagon_polygon)
-            # inner_rect = (rect[0] + 5.0,
-            #               rect[1] + 5.0,
-            #               rect[2] - 10.0,
-            #               rect[3] - 10.0)
-            # inner_octagon_polygon = QPolygonF([QPointF(inner_rect[0],                       inner_rect[1] + 3*inner_rect[3]/10),
-            #                                    QPointF(inner_rect[0],                       inner_rect[1] + 7*inner_rect[3]/10),
-            #                                    QPointF(inner_rect[0] + 3*inner_rect[2]/10,  inner_rect[1] + inner_rect[3]),
-            #                                    QPointF(inner_rect[0] + 7*inner_rect[2]/10,  inner_rect[1] + inner_rect[3]),
-            #                                    QPointF(inner_rect[0] + inner_rect[2],       inner_rect[1] + 7*inner_rect[3]/10),
-            #                                    QPointF(inner_rect[0] + inner_rect[2],       inner_rect[1] + 3*inner_rect[3]/10),
-            #                                    QPointF(inner_rect[0] + 7*inner_rect[2]/10,  inner_rect[1]),
-            #                                    QPointF(inner_rect[0] + 3*inner_rect[2]/10,  inner_rect[1])])
-            # graphics_item = QGraphicsPolygonItem(inner_octagon_polygon)
-            # self.addToGroup(graphics_item)
-            # self._ellipse_pen.setColor(self._default_color)
-            # inner_octagon_polygon.setPen(self._ellipse_pen)
+            hexagon_polygon = QPolygonF([QPointF(rect[0],               rect[1] + rect[3]/2),
+                                         QPointF(rect[0] + rect[2]/4,   rect[1] + rect[3]),
+                                         QPointF(rect[0] + 3*rect[2]/4, rect[1] + rect[3]),
+                                         QPointF(rect[0] + rect[2],     rect[1] + rect[3]/2),
+                                         QPointF(rect[0] + 3*rect[2]/4, rect[1]),
+                                         QPointF(rect[0] + rect[2]/4,   rect[1])])
+            self._graphics_item = QGraphicsPolygonItem(hexagon_polygon)
+
         elif shape == 'note':
             rect = bounding_box.getRect()
             note_polygon = QPolygonF([QPointF(rect[0] + 9*rect[2]/10, rect[1]),

@@ -113,7 +113,7 @@ class RosBehaviourTreeDotcodeGenerator(object):
         elif behaviour_type == py_trees_msgs.Behaviour.PARALLEL:
             return 'note'
         elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
-            return 'doubleoctagon'
+            return 'hexagon'
         else:
             return 'ellipse'
 
