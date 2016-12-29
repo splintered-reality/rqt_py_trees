@@ -53,37 +53,54 @@ class NodeItem(GraphItem):
 
         elif shape == 'octagon':
             rect = bounding_box.getRect()
-            octagon_polygon = QPolygonF([QPointF(rect[0],               rect[1] + 3*rect[3]/10),
-                                         QPointF(rect[0],               rect[1] + 7*rect[3]/10),
-                                         QPointF(rect[0] + 3*rect[2]/10,   rect[1] + rect[3]),
-                                         QPointF(rect[0] + 7*rect[2]/10, rect[1] + rect[3]),
-                                         QPointF(rect[0] + rect[2],     rect[1] + 7*rect[3]/10),
-                                         QPointF(rect[0] + rect[2],     rect[1] + 3*rect[3]/10),
-                                         QPointF(rect[0] + 7*rect[2]/10, rect[1]),
-                                         QPointF(rect[0] + 3*rect[2]/10,   rect[1])])
+            octagon_polygon = QPolygonF([QPointF(rect[0], rect[1] + 3 * rect[3] / 10),
+                                         QPointF(rect[0], rect[1] + 7 * rect[3] / 10),
+                                         QPointF(rect[0] + 3 * rect[2] / 10, rect[1] + rect[3]),
+                                         QPointF(rect[0] + 7 * rect[2] / 10, rect[1] + rect[3]),
+                                         QPointF(rect[0] + rect[2], rect[1] + 7 * rect[3] / 10),
+                                         QPointF(rect[0] + rect[2], rect[1] + 3 * rect[3] / 10),
+                                         QPointF(rect[0] + 7 * rect[2] / 10, rect[1]),
+                                         QPointF(rect[0] + 3 * rect[2] / 10, rect[1])])
             self._graphics_item = QGraphicsPolygonItem(octagon_polygon)
 
-        elif shape == 'hexagon':
+        elif shape == 'doubleoctagon':
             rect = bounding_box.getRect()
-            hexagon_polygon = QPolygonF([QPointF(rect[0],               rect[1] + rect[3]/2),
-                                         QPointF(rect[0] + rect[2]/4,   rect[1] + rect[3]),
-                                         QPointF(rect[0] + 3*rect[2]/4, rect[1] + rect[3]),
-                                         QPointF(rect[0] + rect[2],     rect[1] + rect[3]/2),
-                                         QPointF(rect[0] + 3*rect[2]/4, rect[1]),
-                                         QPointF(rect[0] + rect[2]/4,   rect[1])])
-            self._graphics_item = QGraphicsPolygonItem(hexagon_polygon)
+            inner_fold = 3.0
+
+            octagon_polygon = QPolygonF([QPointF(rect[0], rect[1] + 3 * rect[3] / 10),
+                                         QPointF(rect[0], rect[1] + 7 * rect[3] / 10),
+                                         QPointF(rect[0] + 3 * rect[2] / 10, rect[1] + rect[3]),
+                                         QPointF(rect[0] + 7 * rect[2] / 10, rect[1] + rect[3]),
+                                         QPointF(rect[0] + rect[2], rect[1] + 7 * rect[3] / 10),
+                                         QPointF(rect[0] + rect[2], rect[1] + 3 * rect[3] / 10),
+                                         QPointF(rect[0] + 7 * rect[2] / 10, rect[1]),
+                                         QPointF(rect[0] + 3 * rect[2] / 10, rect[1]),
+                                         # inner
+                                         QPointF(rect[0], rect[1] + 3 * rect[3] / 10),
+                                         QPointF(rect[0] + inner_fold, rect[1] + 3 * rect[3] / 10 + inner_fold / 2),
+                                         QPointF(rect[0] + inner_fold, rect[1] + 7 * rect[3] / 10 - inner_fold / 2),
+                                         QPointF(rect[0] + 3 * rect[2] / 10, rect[1] + rect[3] - inner_fold),
+                                         QPointF(rect[0] + 7 * rect[2] / 10, rect[1] + rect[3] - inner_fold),
+                                         QPointF(rect[0] + rect[2] - inner_fold, rect[1] + 7 * rect[3] / 10 - inner_fold / 2),
+                                         QPointF(rect[0] + rect[2] - inner_fold, rect[1] + 3 * rect[3] / 10 + inner_fold / 2),
+                                         QPointF(rect[0] + 7 * rect[2] / 10, rect[1] + inner_fold),
+                                         QPointF(rect[0] + 3 * rect[2] / 10, rect[1] + inner_fold),
+                                         QPointF(rect[0] + inner_fold, rect[1] + 3 * rect[3] / 10 + inner_fold / 2)
+                                         ])
+
+            self._graphics_item = QGraphicsPolygonItem(octagon_polygon)
 
         elif shape == 'note':
             rect = bounding_box.getRect()
-            note_polygon = QPolygonF([QPointF(rect[0] + 9*rect[2]/10, rect[1]),
-                                      QPointF(rect[0],                rect[1]),
-                                      QPointF(rect[0],                rect[1] + rect[3]),
-                                      QPointF(rect[0] + rect[2],      rect[1] + rect[3]),
-                                      QPointF(rect[0] + rect[2],      rect[1] + rect[3]/5),
-                                      QPointF(rect[0] + 9*rect[2]/10, rect[1] + rect[3]/5),
-                                      QPointF(rect[0] + 9*rect[2]/10, rect[1]),
-                                      QPointF(rect[0] + rect[2],      rect[1] + rect[3]/5),
-                                      QPointF(rect[0] + rect[2],      rect[1] + rect[3]/5)])
+            note_polygon = QPolygonF([QPointF(rect[0] + 9 * rect[2] / 10, rect[1]),
+                                      QPointF(rect[0], rect[1]),
+                                      QPointF(rect[0], rect[1] + rect[3]),
+                                      QPointF(rect[0] + rect[2], rect[1] + rect[3]),
+                                      QPointF(rect[0] + rect[2], rect[1] + rect[3] / 5),
+                                      QPointF(rect[0] + 9 * rect[2] / 10, rect[1] + rect[3] / 5),
+                                      QPointF(rect[0] + 9 * rect[2] / 10, rect[1]),
+                                      QPointF(rect[0] + rect[2], rect[1] + rect[3] / 5),
+                                      QPointF(rect[0] + rect[2], rect[1] + rect[3] / 5)])
             self._graphics_item = QGraphicsPolygonItem(note_polygon)
 
         else:
