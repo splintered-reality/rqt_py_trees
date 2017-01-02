@@ -109,9 +109,13 @@ class RosBehaviourTreeDotcodeGenerator(object):
         elif behaviour_type == py_trees_msgs.Behaviour.SEQUENCE:
             return 'box'
         elif behaviour_type == py_trees_msgs.Behaviour.SELECTOR:
-            return 'ellipse'
+            return 'octagon'
+        elif behaviour_type == py_trees_msgs.Behaviour.PARALLEL:
+            return 'note'
+        elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
+            return 'doubleoctagon'
         else:
-            return 'box'
+            return 'ellipse'
 
     def type_to_colour(self, behaviour_type):
         if behaviour_type == py_trees_msgs.Behaviour.BEHAVIOUR:
@@ -119,6 +123,10 @@ class RosBehaviourTreeDotcodeGenerator(object):
         elif behaviour_type == py_trees_msgs.Behaviour.SEQUENCE:
             return '#ff9900'
         elif behaviour_type == py_trees_msgs.Behaviour.SELECTOR:
+            return '#808080'
+        elif behaviour_type == py_trees_msgs.Behaviour.PARALLEL:
+            return '#ffd700'
+        elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
             return '#808080'
         else:
             return None
@@ -130,6 +138,10 @@ class RosBehaviourTreeDotcodeGenerator(object):
             return 'Sequence'
         elif behaviour_type == py_trees_msgs.Behaviour.SELECTOR:
             return 'Selector'
+        elif behaviour_type == py_trees_msgs.Behaviour.PARALLEL:
+            return 'Parallel'
+        elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
+            return 'Chooser'
         else:
             return None
 
