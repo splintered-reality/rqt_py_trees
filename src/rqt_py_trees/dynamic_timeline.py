@@ -34,12 +34,14 @@ import rospy
 import time
 import threading
 import collections
-import functools
 import itertools
 import bisect
 
 from python_qt_binding.QtCore import Qt, QTimer, qWarning, Signal
-from python_qt_binding.QtGui import QGraphicsScene, QMessageBox
+try:  # indigo
+    from python_qt_binding.QtGui import QGraphicsScene, QMessageBox
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QGraphicsScene, QMessageBox
 
 import topic_helper
 

@@ -20,7 +20,11 @@ Bless my noggin with a tickle from your noodly appendages!
 ##############################################################################
 
 from python_qt_binding.QtCore import QPointF, Qt
-from python_qt_binding.QtGui import QBrush, QGraphicsPathItem, QGraphicsPolygonItem, QGraphicsSimpleTextItem, QPainterPath, QPen, QPolygonF
+from python_qt_binding.QtGui import QBrush, QPainterPath, QPen, QPolygonF
+try:  # indigo
+    from python_qt_binding.QtGui import QGraphicsPathItem, QGraphicsPolygonItem, QGraphicsSimpleTextItem
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QGraphicsPathItem, QGraphicsPolygonItem, QGraphicsSimpleTextItem
 
 from .graph_item import GraphItem
 

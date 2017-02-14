@@ -61,8 +61,12 @@ from rqt_graph.interactive_graphics_view import InteractiveGraphicsView
 
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import QFile, QIODevice, QObject, Qt, Signal, QEvent, Slot
-from python_qt_binding.QtGui import QFileDialog, QGraphicsView, QGraphicsScene, QIcon, QImage, QPainter, QWidget, QShortcut, QKeySequence
+from python_qt_binding.QtGui import QIcon, QImage, QPainter, QKeySequence
 from python_qt_binding.QtSvg import QSvgGenerator
+try:  # indigo
+    from python_qt_binding.QtGui import QFileDialog, QGraphicsView, QGraphicsScene, QWidget, QShortcut
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QFileDialog, QGraphicsView, QGraphicsScene, QWidget, QShortcut
 
 from . import qt_dotgraph
 

@@ -19,7 +19,11 @@ Bless my noggin with a tickle from your noodly appendages!
 # Imports
 ##############################################################################
 
-from python_qt_binding.QtGui import QColor, QGraphicsItemGroup
+from python_qt_binding.QtGui import QColor
+try:  # indigo
+    from python_qt_binding.QtGui import QGraphicsItemGroup
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QGraphicsItemGroup
 
 ##############################################################################
 # Classes

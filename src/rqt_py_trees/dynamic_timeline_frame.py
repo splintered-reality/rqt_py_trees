@@ -33,10 +33,13 @@
 
 from python_qt_binding.QtCore import qDebug, QPointF, QRectF, Qt, qWarning, Signal
 from python_qt_binding.QtGui import QBrush, QCursor, QColor, QFont, \
-                                    QFontMetrics, QGraphicsItem, QPen, \
-                                    QPolygonF
-import rospy
+                                    QFontMetrics, QPen, QPolygonF
+try:  # indigo
+    from python_qt_binding.QtGui import QGraphicsItem
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QGraphicsItem
 
+import rospy
 import bisect
 import threading
 

@@ -37,7 +37,10 @@ import codecs
 import math
 
 from python_qt_binding.QtCore import Qt
-from python_qt_binding.QtGui import QApplication, QAbstractItemView, QSizePolicy, QTreeWidget, QTreeWidgetItem
+try:  # indigo
+    from python_qt_binding.QtGui import QApplication, QAbstractItemView, QSizePolicy, QTreeWidget, QTreeWidgetItem
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QApplication, QAbstractItemView, QSizePolicy, QTreeWidget, QTreeWidgetItem
 from .topic_message_view import TopicMessageView
 
 

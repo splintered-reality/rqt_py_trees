@@ -31,7 +31,11 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from .message_view import MessageView
 
-from python_qt_binding.QtGui import QAction, QIcon, QToolBar
+from python_qt_binding.QtGui import QIcon
+try:  # indigo
+    from python_qt_binding.QtGui import QAction, QToolBar
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QAction, QToolBar
 
 
 class TopicMessageView(MessageView):

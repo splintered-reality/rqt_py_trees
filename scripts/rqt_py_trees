@@ -2,7 +2,11 @@
 
 import sys
 import signal
-from python_qt_binding.QtGui import QApplication, QMainWindow
+try:  # indigo
+    from python_qt_binding.QtGui import QApplication, QMainWindow
+except ImportError:  # kinetic+ (pyqt5)
+    from python_qt_binding.QtWidgets import QApplication, QMainWindow
+
 from rqt_py_trees.behaviour_tree import RosBehaviourTree
 
 from rqt_gui.main import Main
