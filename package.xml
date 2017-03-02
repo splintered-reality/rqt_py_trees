@@ -1,6 +1,6 @@
 <package>
   <name>rqt_py_trees</name>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <description>
     rqt_py_trees provides a GUI plugin for visualizing py_trees behaviour trees based on rqt_tf_tree.
   </description>
