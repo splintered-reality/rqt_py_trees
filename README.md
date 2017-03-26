@@ -12,7 +12,7 @@ Refer to the [py_trees_ros package documentation](https://stonier.github.io/py_t
 [devel-sources-image]: http://img.shields.io/badge/sources-devel-blue.svg?style=plastic
 [devel-sources]: https://github.com/stonier/rqt_py_trees/tree/devel
 [0.3.x-sources-image]: http://img.shields.io/badge/sources-0.3.x--kinetic-blue.svg?style=plastic
-[0.3.x-sources]: https://github.com/stonier/rqt_py_trees/tree/release/0.5-kinetic
+[0.3.x-sources]: https://github.com/stonier/rqt_py_trees/tree/release/0.3-kinetic
 
 [devel-build-status-image]: http://build.ros.org/job/Kdev__rqt_py_trees__ubuntu_xenial_amd64/badge/icon?style=plastic
 [devel-build-status]: http://build.ros.org/job/Kdev__rqt_py_trees__ubuntu_xenial_amd64                     
