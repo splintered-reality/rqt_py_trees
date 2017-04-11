@@ -1,6 +1,6 @@
 # Rqt Py Trees
 
-Refer to the [py_trees_ros package documentation](https://stonier.github.io/py_trees_ros/) for more information.
+Refer to the sphinx documentation for [py_trees](http://py-trees.readthedocs.io/en/devel/) as a primer and reference on behaviour trees & [py_trees_ros](https://stonier.github.io/py_trees_ros/) for tutorials on getting started with behaviour trees in ROS.
 
 ## Build Status
 
