@@ -2,6 +2,13 @@
 
 Refer to the sphinx documentation for [py_trees](http://py-trees.readthedocs.io/en/devel/) as a primer and reference on behaviour trees & [py_trees_ros](https://stonier.github.io/py_trees_ros/) for tutorials on getting started with behaviour trees in ROS.
 
+## The ROS Py Trees Repositories
+
+* [py_trees](https://github.com/stonier/py_trees)
+* [py_trees_msgs](https://github.com/stonier/py_trees_msgs)
+* [py_trees_ros](https://github.com/stonier/py_trees_ros)
+* [rqt_py_trees](https://github.com/stonier/rqt_py_trees)
+
 ## Build Status
 
 | Devel | Kinetic |
@@ -18,11 +25,4 @@ Refer to the sphinx documentation for [py_trees](http://py-trees.readthedocs.io/
 [devel-build-status]: http://build.ros.org/job/Kdev__rqt_py_trees__ubuntu_xenial_amd64                     
 [kinetic-build-status-image]: http://build.ros.org/job/Kbin_uX64__rqt_py_trees__ubuntu_xenial_amd64__binary/badge/icon?style=plastic
 [kinetic-build-status]: http://build.ros.org/job/Kbin_uX64__rqt_py_trees__ubuntu_xenial_amd64__binary
-
-## The ROS Py Trees Repositories
-
-* [py_trees](https://github.com/stonier/py_trees)
-* [py_trees_msgs](https://github.com/stonier/py_trees_msgs)
-* [py_trees_ros](https://github.com/stonier/py_trees_ros)
-* [rqt_py_trees](https://github.com/stonier/rqt_py_trees)
 
