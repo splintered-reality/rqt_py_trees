@@ -37,6 +37,7 @@
   <run_depend>py_trees_msgs</run_depend>
   <run_depend>rqt_bag</run_depend>
   <run_depend>unique_id</run_depend>
+  <run_depend>python-pygraphviz</run_depend>
 
   <test_depend>python-mock</test_depend>
 
