@@ -107,6 +107,15 @@ class NodeItem(GraphItem):
                                       QPointF(rect[0] + rect[2], rect[1] + rect[3] / 5)])
             self._graphics_item = QGraphicsPolygonItem(note_polygon)
 
+        elif shape == 'diamond':
+            rect = bounding_box.getRect()
+            diamond_polygon = QPolygonF([QPointF(rect[0], rect[1] + rect[3] / 2),
+                                         QPointF(rect[0] + rect[2] / 2, rect[1] + rect[3]),
+                                         QPointF(rect[0] + rect[2], rect[1] + rect[3] / 2),
+                                         QPointF(rect[0] + rect[2] / 2, rect[1]),
+                                         ])
+            self._graphics_item = QGraphicsPolygonItem(diamond_polygon)
+
         else:
             self._graphics_item = QGraphicsEllipseItem(bounding_box)
         self.addToGroup(self._graphics_item)
