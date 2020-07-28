@@ -1,3 +1,7 @@
+*ROS1 only!!!*
+
+*See [py_trees_ros_viewer](https://github.com/splintered-reality/py_trees_ros_viewer) for the ROS2 visualisation tool for py_trees.*
+
 # Rqt Py Trees
 
 Refer to the sphinx documentation for [py_trees](http://py-trees.readthedocs.io/en/devel/) as a primer and reference on behaviour trees & [py_trees_ros](https://stonier.github.io/py_trees_ros/) for tutorials on getting started with behaviour trees in ROS.
