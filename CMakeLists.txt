@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(rqt_py_trees)
 set(CMAKE_CXX_FLAGS "-g ${CMAKE_CXX_FLAGS}")
 # Load catkin and all dependencies required for this package
