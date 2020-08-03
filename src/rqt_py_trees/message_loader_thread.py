@@ -109,4 +109,5 @@ class MessageLoaderThread(threading.Thread):
         self._stop_flag = True
         cv = self.timeline._playhead_positions_cvs[self.topic]
         with cv:
+            print("DJS: self.timeline._playhead_positions_cvs[self.topic].notify_all() [MessageLoader:stop")
             cv.notify_all()

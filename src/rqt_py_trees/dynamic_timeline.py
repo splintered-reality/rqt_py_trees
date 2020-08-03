@@ -43,14 +43,14 @@ try:  # indigo
 except ImportError:  # kinetic+ (pyqt5)
     from python_qt_binding.QtWidgets import QGraphicsScene, QMessageBox
 
-import topic_helper
-
 from .dynamic_timeline_frame import DynamicTimelineFrame
 from rqt_bag.message_listener_thread import MessageListenerThread
 from .message_loader_thread import MessageLoaderThread
 from rqt_bag.player import Player
 from rqt_bag.recorder import Recorder
 from rqt_bag.timeline_menu import TimelinePopupMenu
+
+from . import topic_helper
 
 
 class DynamicTimeline(QGraphicsScene):
@@ -167,8 +167,12 @@ class DynamicTimeline(QGraphicsScene):
     def _redraw_timeline(self, timer):
         # save the playhead so that the redraw doesn't move it
         playhead = self._timeline_frame._playhead
-        end = True if playhead >= self._timeline_frame.play_region[1] else False
-        start = True if playhead <= self._timeline_frame.play_region[0] else False
+        if playhead is None:
+            start = self._timeline_frame.play_region[0] is None
+            end = self._timeline_frame.play_region[1] is None
+        else:
+            start = True if playhead <= self._timeline_frame.play_region[0] else False
+            end = True if playhead >= self._timeline_frame.play_region[1] else False
 
         # do not keep setting this if you want the timeline to just grow.
         self._timeline_frame._start_stamp = self._get_start_stamp()
@@ -204,8 +208,8 @@ class DynamicTimeline(QGraphicsScene):
         # Invalidate entire cache for this topic
         with self._timeline_frame.index_cache_cv:
             self._timeline_frame.invalidated_caches.add(topic)
-            #if topic in self._timeline_frame.index_cache:
-            #    del self._timeline_frame.index_cache[topic]
+            # if topic in self._timeline_frame.index_cache:
+            #     del self._timeline_frame.index_cache[topic]
             self._timeline_frame.index_cache_cv.notify()
 
     def add_topic(self, topic, type, num_msgs=20):
@@ -248,7 +252,7 @@ class DynamicTimeline(QGraphicsScene):
 
         return True
 
-    #TODO Rethink API and if these need to be visible
+    # TODO Rethink API and if these need to be visible
     def _get_start_stamp(self):
         """
 
@@ -256,12 +260,11 @@ class DynamicTimeline(QGraphicsScene):
         """
         with self._topic_lock:
             start_stamp = None
-            for topic_name, topic_tuple in self._topics.iteritems():
+            for unused_topic_name, topic_tuple in self._topics.items():
                 topic_start_stamp = topic_helper.get_start_stamp(topic_tuple)
                 if topic_start_stamp is not None and (start_stamp is None or topic_start_stamp < start_stamp):
                     start_stamp = topic_start_stamp
             return start_stamp
-
 
     def _get_end_stamp(self):
         """
@@ -270,7 +273,7 @@ class DynamicTimeline(QGraphicsScene):
         """
         with self._topic_lock:
             end_stamp = None
-            for topic_name, topic_tuple in self._topics.iteritems():
+            for unused_topic_name, topic_tuple in self._topics.items():
                 topic_end_stamp = topic_helper.get_end_stamp(topic_tuple)
                 if topic_end_stamp is not None and (end_stamp is None or topic_end_stamp > end_stamp):
                     end_stamp = topic_end_stamp
@@ -397,7 +400,14 @@ class DynamicTimeline(QGraphicsScene):
         """
         # Gives the index to insert into to retain a sorted queue. The topic queues
         # should always be sorted due to time passing.
-        ind = bisect.bisect(queue, self.Message(stamp=t, message=''))
+
+        # ind = bisect.bisect(queue, self.Message(stamp=t, message=''))
+        # Can't use bisect here in python3 unless the correct operators
+        # are defined for sorting, so do it manually
+        try:
+            ind = next(i for i, msg in enumerate(queue) if t < msg.stamp)
+        except StopIteration:
+            ind = len(queue)
 
         # first or last indices
         if ind == len(queue):
@@ -791,12 +801,11 @@ class DynamicTimeline(QGraphicsScene):
         self.last_frame = rospy.Time.from_sec(time.time())
         self.last_playhead = self._timeline_frame.playhead
 
-    ### Recording
-
+    # Recording
     def record_bag(self, filename, all=True, topics=[], regex=False, limit=0):
         try:
             self._recorder = Recorder(filename, bag_lock=self._bag_lock, all=all, topics=topics, regex=regex, limit=limit)
-        except Exception, ex:
+        except Exception as ex:
             qWarning('Error opening bag for recording [%s]: %s' % (filename, str(ex)))
             return
 
@@ -844,10 +853,10 @@ class DynamicTimeline(QGraphicsScene):
             for listener in self._listeners[topic]:
                 try:
                     listener.timeline_changed()
-                except Exception, ex:
+                except Exception as ex:
                     qWarning('Error calling timeline_changed on %s: %s' % (type(listener), str(ex)))
 
-    ### Views / listeners
+    # Views / listeners
     def add_view(self, topic, frame):
         self._views.append(frame)
 

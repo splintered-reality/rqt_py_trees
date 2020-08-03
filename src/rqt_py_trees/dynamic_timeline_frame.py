@@ -449,6 +449,7 @@ class DynamicTimelineFrame(QGraphicsItem):
             painter.setPen(curpen)
             playhead_stamp = None
             playhead_index = bisect.bisect_right(all_stamps, self.playhead.to_sec()) - 1
+
             if playhead_index >= 0:
                 playhead_stamp = all_stamps[playhead_index]
                 if playhead_stamp > self._stamp_left and playhead_stamp < self._stamp_right:
@@ -758,7 +759,7 @@ class DynamicTimelineFrame(QGraphicsItem):
                 return
             self._rendered_topics.add(topic)
         else:
-            if not topic in self._rendered_topics:
+            if topic not in self._rendered_topics:
                 return
             self._rendered_topics.remove(topic)
         self.scene().update()
