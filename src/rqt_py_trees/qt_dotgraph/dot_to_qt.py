@@ -19,6 +19,8 @@ Bless my noggin with a tickle from your noodly appendages!
 # Imports
 ##############################################################################
 
+import codecs
+
 # import pydot
 import pygraphviz
 import pyparsing
@@ -144,7 +146,10 @@ class DotToQtGenerator():
             # happens on Lucid pygraphviz version
             print("Error, label is None for node %s, pygraphviz version may be too old." % node)
         else:
-            name = name.decode('string_escape')
+            # python2
+            # name = name.decode('string_escape')
+            # python3
+            name = codecs.escape_decode(name)[0].decode('utf-8')
 
         # decrease rect by one so that edges do not reach inside
         bb_width = len(name) / 5
@@ -255,7 +260,11 @@ class DotToQtGenerator():
         # graph.subgraphs_iter = graph.get_subgraph_list
 
         # pygraphviz
-        graph = pygraphviz.AGraph(string=dotcode.encode("ascii", "ignore"), strict=False, directed=True)
+        graph = pygraphviz.AGraph(
+            string=dotcode,  # .encode("ascii", "ignore"),
+            strict=False,
+            directed=True
+        )
         graph.layout(prog='dot')
 
         nodes = {}

@@ -188,9 +188,12 @@ class RosBehaviourTreeDotcodeGenerator(object):
             self.dotcode_factory.add_node_to_graph(graph, 'No behaviour data received')
             return graph
 
-        behaviour_dict_by_id = {}
-        for behaviour in data:
-            behaviour_dict_by_id[behaviour.own_id] = behaviour
+        # DJS - not actually used? In python3 this is a propblem since
+        # unique_id.UniqueID is not hashable any longer
+        # behaviour_dict_by_id = {}
+        # for behaviour in data:
+        #     behaviour_dict_by_id[behaviour.own_id] = behaviour
+
         # first, add nodes to the graph, along with some cached information to
         # make it easy to create the coloured edges on the second pass
         states = {}
@@ -212,9 +215,11 @@ class RosBehaviourTreeDotcodeGenerator(object):
                     # the child isn't part of the 'visible' tree
                     continue
                 edge_colour = self.active_and_status_colour_tuple_map[(is_active, status)]
-                self.dotcode_factory.add_edge_to_graph(graph,
-                                                       str(behaviour.own_id),
-                                                       str(child_id),
-                                                       color=edge_colour)
+                self.dotcode_factory.add_edge_to_graph(
+                    graph=graph,
+                    nodename1=str(behaviour.own_id),
+                    nodename2=str(child_id),
+                    color=edge_colour
+                )
 
         return graph

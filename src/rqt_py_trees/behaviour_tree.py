@@ -52,9 +52,9 @@ from .dotcode_behaviour import RosBehaviourTreeDotcodeGenerator
 from .dynamic_timeline import DynamicTimeline
 from .dynamic_timeline_listener import DynamicTimelineListener
 from .timeline_listener import TimelineListener
-from qt_dotgraph.dot_to_qt import DotToQtGenerator
-from qt_dotgraph.pydotfactory import PydotFactory
-from qt_dotgraph.pygraphvizfactory import PygraphvizFactory
+from .qt_dotgraph.dot_to_qt import DotToQtGenerator
+from .qt_dotgraph.pydotfactory import PydotFactory
+from .qt_dotgraph.pygraphvizfactory import PygraphvizFactory
 from rqt_bag.bag_timeline import BagTimeline
 # from rqt_bag.bag_widget import BagGraphicsView
 from rqt_graph.interactive_graphics_view import InteractiveGraphicsView
@@ -67,8 +67,6 @@ try:  # indigo
     from python_qt_binding.QtGui import QFileDialog, QGraphicsView, QGraphicsScene, QWidget, QShortcut
 except ImportError:  # kinetic+ (pyqt5)
     from python_qt_binding.QtWidgets import QFileDialog, QGraphicsView, QGraphicsScene, QWidget, QShortcut
-
-from . import qt_dotgraph
 
 
 class RosBehaviourTree(QObject):
@@ -650,9 +648,9 @@ class RosBehaviourTree(QObject):
             (nodes, edges) = self.dot_to_qt.dotcode_to_qt_items(self._current_dotcode,
                                                                 highlight_level)
 
-            for node_item in nodes.itervalues():
+            for node_item in iter(nodes.values()):
                 new_scene.addItem(node_item)
-            for edge_items in edges.itervalues():
+            for edge_items in iter(edges.values()):
                 for edge_item in edge_items:
                     edge_item.add_to_scene(new_scene)
 
@@ -819,10 +817,10 @@ class RosBehaviourTree(QObject):
         rospy.loginfo("Reading bag from {0}".format(file_name))
         bag = rosbag.Bag(file_name, 'r')
         # ugh...
-        topics = bag.get_type_and_topic_info()[1].keys()
+        topics = list(bag.get_type_and_topic_info()[1].keys())
         types = []
         for i in range(0, len(bag.get_type_and_topic_info()[1].values())):
-            types.append(bag.get_type_and_topic_info()[1].values()[i][0])
+            types.append(list(bag.get_type_and_topic_info()[1].values())[i][0])
 
         tree_topics = []  # only look at the first matching topic
         for ind, tp in enumerate(types):

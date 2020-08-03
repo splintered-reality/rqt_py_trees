@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.4.0 (2020-08-03)
+------------------
+* python3 and noetic upgrades
+
 0.3.1 (2017-04-11)
 ------------------
 * add missing python-pygraphviz dependency
