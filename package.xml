@@ -26,8 +26,8 @@
   <build_depend>rqt_bag</build_depend>
 
   <run_depend>geometry_msgs</run_depend>
-  <run_depend>python-rospkg</run_depend>
-  <run_depend>python-termcolor</run_depend>
+  <run_depend>python3-rospkg</run_depend>
+  <run_depend>python3-termcolor</run_depend>
   <run_depend>qt_dotgraph</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>rqt_graph</run_depend>
@@ -37,9 +37,9 @@
   <run_depend>py_trees_msgs</run_depend>
   <run_depend>rqt_bag</run_depend>
   <run_depend>unique_id</run_depend>
-  <run_depend>python-pygraphviz</run_depend>
+  <run_depend>python3-pygraphviz</run_depend>
 
-  <test_depend>python-mock</test_depend>
+  <test_depend>python3-mock</test_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>
