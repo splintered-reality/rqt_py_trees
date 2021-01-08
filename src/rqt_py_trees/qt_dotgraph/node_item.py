@@ -35,7 +35,7 @@ from .graph_item import GraphItem
 
 class NodeItem(GraphItem):
 
-    def __init__(self, highlight_level, bounding_box, label, shape, color=None, parent=None, label_pos=None, tooltip=None):
+    def __init__(self, highlight_level, bounding_box, label, shape, color=None, parent=None, label_pos=None, tooltip=None, uuid=None, click_obj=None):
         super(NodeItem, self).__init__(highlight_level, parent)
 
         self._default_color = self._COLOR_BLACK if color is None else color
@@ -128,6 +128,9 @@ class NodeItem(GraphItem):
 
         self.hovershape = None
 
+        self._id = uuid
+        self._click_obj = click_obj
+
     def set_hovershape(self, newhovershape):
         self.hovershape = newhovershape
 
@@ -202,3 +205,7 @@ class NodeItem(GraphItem):
                 outgoing_edge.set_node_color()
                 if self._highlight_level > 2 and outgoing_edge.to_node != self:
                     outgoing_edge.to_node.set_node_color()
+
+    def mouseDoubleClickEvent(self, event):
+        if self._click_obj is not None:
+            self._click_obj._click_callback(self._id)
