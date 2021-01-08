@@ -45,6 +45,7 @@ import rospy
 import sys
 import termcolor
 import uuid_msgs.msg as uuid_msgs
+import unique_id
 
 from . import visibility
 
@@ -52,9 +53,10 @@ from .dotcode_behaviour import RosBehaviourTreeDotcodeGenerator
 from .dynamic_timeline import DynamicTimeline
 from .dynamic_timeline_listener import DynamicTimelineListener
 from .timeline_listener import TimelineListener
-from qt_dotgraph.dot_to_qt import DotToQtGenerator
-from qt_dotgraph.pydotfactory import PydotFactory
-from qt_dotgraph.pygraphvizfactory import PygraphvizFactory
+from .qt_dotgraph.dot_to_qt import DotToQtGenerator
+from .qt_dotgraph.pydotfactory import PydotFactory
+from .qt_dotgraph.pygraphvizfactory import PygraphvizFactory
+from visibility import items_with_hidden_children
 from rqt_bag.bag_timeline import BagTimeline
 # from rqt_bag.bag_widget import BagGraphicsView
 from rqt_graph.interactive_graphics_view import InteractiveGraphicsView
@@ -68,8 +70,6 @@ try:  # indigo
 except ImportError:  # kinetic+ (pyqt5)
     from python_qt_binding.QtWidgets import QFileDialog, QGraphicsView, QGraphicsScene, QWidget, QShortcut
 
-from . import qt_dotgraph
-
 
 class RosBehaviourTree(QObject):
 
@@ -78,6 +78,7 @@ class RosBehaviourTree(QObject):
     _refresh_combo = Signal()
     _message_changed = Signal()
     _message_cleared = Signal()
+    _node_item_click_event = Signal(str)
     _expected_type = py_trees_msgs.BehaviourTree()._type
     _empty_topic = "No valid topics available"
     _unselected_topic = "Not subscribing"
@@ -267,6 +268,10 @@ class RosBehaviourTree(QObject):
         self._refresh_view.connect(self._refresh_tree_graph)
 
         self._force_refresh = False
+        self._force_redraw = False
+
+        # click callback with a delayed response
+        self._node_item_click_event.connect(self.node_item_click_event, type=Qt.QueuedConnection)
 
         if self.live_update:
             context.add_widget(self._widget)
@@ -288,6 +293,8 @@ class RosBehaviourTree(QObject):
         We match the combobox index to the visibility levels defined in py_trees.common.VisibilityLevel.
         """
         self.visibility_level = visibility.combo_to_py_trees[visibility_level]
+        self._force_refresh = True
+        self._force_redraw = True
         self._refresh_tree_graph()
 
     @staticmethod
@@ -602,7 +609,8 @@ class RosBehaviourTree(QObject):
 
         key = str(message.header.stamp)  # stamps are unique
         if key in self._dotcode_cache:
-            return self._dotcode_cache[key]
+            if not self._force_refresh:
+                return self._dotcode_cache[key]
 
         force_refresh = self._force_refresh
         self._force_refresh = False
@@ -615,8 +623,9 @@ class RosBehaviourTree(QObject):
                                                           timestamp=message.header.stamp,
                                                           force_refresh=force_refresh
                                                           )
+        if key not in self._dotcode_cache:
+            self._dotcode_cache_keys.append(key)
         self._dotcode_cache[key] = dotcode
-        self._dotcode_cache_keys.append(key)
 
         if len(self._dotcode_cache) > self._dotcode_cache_capacity:
             oldest = self._dotcode_cache_keys[0]
@@ -631,9 +640,18 @@ class RosBehaviourTree(QObject):
         self._current_dotcode = dotcode
         self._redraw_graph_view()
 
+    def node_item_click_event(self, id):
+        if str(id) in items_with_hidden_children:
+            items_with_hidden_children.remove(str(id))
+        else:
+            items_with_hidden_children.append(str(id))
+        self._force_refresh = True
+        self._force_redraw = True
+        self._refresh_view.emit()
+
     def _redraw_graph_view(self):
         key = str(self.get_current_message().header.stamp)
-        if key in self._scene_cache:
+        if key in self._scene_cache and not self._force_redraw:
             new_scene = self._scene_cache[key]
         else:  # cache miss
             new_scene = QGraphicsScene()
@@ -648,11 +666,12 @@ class RosBehaviourTree(QObject):
             #                                                  highlight_level)
             # this function is very expensive
             (nodes, edges) = self.dot_to_qt.dotcode_to_qt_items(self._current_dotcode,
-                                                                highlight_level)
+                                                                highlight_level,
+                                                                click_signal=self._node_item_click_event)
 
-            for node_item in nodes.itervalues():
+            for node_item in iter(nodes.values()):
                 new_scene.addItem(node_item)
-            for edge_items in edges.itervalues():
+            for edge_items in iter(edges.values()):
                 for edge_item in edge_items:
                     edge_item.add_to_scene(new_scene)
 
@@ -660,12 +679,15 @@ class RosBehaviourTree(QObject):
 
             # put the scene in the cache
             self._scene_cache[key] = new_scene
-            self._scene_cache_keys.append(key)
+            if not self._force_redraw:
+                self._scene_cache_keys.append(key)
 
             if len(self._scene_cache) > self._scene_cache_capacity:
                 oldest = self._scene_cache_keys[0]
                 del self._scene_cache[oldest]
                 self._scene_cache_keys.remove(oldest)
+
+            self._force_redraw = False
 
         # after construction, set the scene and fit to the view
         self._scene = new_scene
@@ -819,10 +841,10 @@ class RosBehaviourTree(QObject):
         rospy.loginfo("Reading bag from {0}".format(file_name))
         bag = rosbag.Bag(file_name, 'r')
         # ugh...
-        topics = bag.get_type_and_topic_info()[1].keys()
+        topics = list(bag.get_type_and_topic_info()[1].keys())
         types = []
         for i in range(0, len(bag.get_type_and_topic_info()[1].values())):
-            types.append(bag.get_type_and_topic_info()[1].values()[i][0])
+            types.append(list(bag.get_type_and_topic_info()[1].values())[i][0])
 
         tree_topics = []  # only look at the first matching topic
         for ind, tp in enumerate(types):
