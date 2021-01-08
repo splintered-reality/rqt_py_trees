@@ -112,7 +112,7 @@ class DotToQtGenerator():
         subgraph_nodeitem.set_hovershape(bounding_box)
         return subgraph_nodeitem
 
-    def getNodeItemForNode(self, node, highlight_level, click_obj=None):
+    def getNodeItemForNode(self, node, highlight_level, click_signal=None):
         """
         returns a pyqt NodeItem object, or None in case of error or invisible style
         """
@@ -168,7 +168,7 @@ class DotToQtGenerator():
                              # parent=None,
                              # label_pos=None
                              uuid=node.name,
-                             click_obj=click_obj
+                             click_signal=click_signal
                              )
         # node_item.setToolTip(self._generate_tool_tip(node.attr.get('URL', None)))
         return node_item
@@ -239,7 +239,7 @@ class DotToQtGenerator():
             edges[label] = []
         edges[label].append(edge_item)
 
-    def dotcode_to_qt_items(self, dotcode, highlight_level, same_label_siblings=False, click_obj=None):
+    def dotcode_to_qt_items(self, dotcode, highlight_level, same_label_siblings=False, click_signal=None):
         """
         takes dotcode, runs layout, and creates qt items based on the dot layout.
         returns two dicts, one mapping node names to Node_Item, one mapping edge names to lists of Edge_Item
@@ -273,12 +273,12 @@ class DotToQtGenerator():
                 # hack required by pydot
                 if node.get_name() in ('graph', 'node', 'empty'):
                     continue
-                nodes[node.get_name()] = self.getNodeItemForNode(node, highlight_level, click_obj)
+                nodes[node.get_name()] = self.getNodeItemForNode(node, highlight_level, click_signal)
         for node in graph.nodes_iter():
             # hack required by pydot
             if node.get_name() in ('graph', 'node', 'empty'):
                 continue
-            nodes[node.get_name()] = self.getNodeItemForNode(node, highlight_level, click_obj)
+            nodes[node.get_name()] = self.getNodeItemForNode(node, highlight_level, click_signal)
 
         edges = {}
 

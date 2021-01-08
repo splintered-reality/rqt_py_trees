@@ -78,6 +78,7 @@ class RosBehaviourTree(QObject):
     _refresh_combo = Signal()
     _message_changed = Signal()
     _message_cleared = Signal()
+    _node_item_click_event = Signal(str)
     _expected_type = py_trees_msgs.BehaviourTree()._type
     _empty_topic = "No valid topics available"
     _unselected_topic = "Not subscribing"
@@ -268,6 +269,9 @@ class RosBehaviourTree(QObject):
 
         self._force_refresh = False
         self._force_redraw = False
+
+        # click callback with a delayed response
+        self._node_item_click_event.connect(self.node_item_click_event, type=Qt.QueuedConnection)
 
         if self.live_update:
             context.add_widget(self._widget)
@@ -636,7 +640,7 @@ class RosBehaviourTree(QObject):
         self._current_dotcode = dotcode
         self._redraw_graph_view()
 
-    def _click_callback(self, id):
+    def node_item_click_event(self, id):
         if str(id) in items_with_hidden_children:
             items_with_hidden_children.remove(str(id))
         else:
@@ -663,7 +667,7 @@ class RosBehaviourTree(QObject):
             # this function is very expensive
             (nodes, edges) = self.dot_to_qt.dotcode_to_qt_items(self._current_dotcode,
                                                                 highlight_level,
-                                                                click_obj=self)
+                                                                click_signal=self._node_item_click_event)
 
             for node_item in iter(nodes.values()):
                 new_scene.addItem(node_item)
