@@ -114,6 +114,8 @@ class RosBehaviourTreeDotcodeGenerator(object):
             return 'note'
         elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
             return 'doubleoctagon'
+        elif behaviour_type == py_trees_msgs.Behaviour.DECORATOR:
+            return 'invhouse'
         else:
             return 'ellipse'
 
@@ -128,6 +130,8 @@ class RosBehaviourTreeDotcodeGenerator(object):
             return '#ffd700'
         elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
             return '#808080'
+        elif behaviour_type == py_trees_msgs.Behaviour.DECORATOR:
+            return '#ff9900'
         else:
             return None
 
@@ -142,6 +146,8 @@ class RosBehaviourTreeDotcodeGenerator(object):
             return 'Parallel'
         elif behaviour_type == py_trees_msgs.Behaviour.CHOOSER:
             return 'Chooser'
+        elif behaviour_type == py_trees_msgs.Behaviour.DECORATOR:
+            return 'Decorator'
         else:
             return None
 
