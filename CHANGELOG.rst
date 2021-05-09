@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.4.1 (2021-05-09)
+------------------
+* bugfix a python2->3 iterator->list generator in dynamic_timeline
+* provide a --topic argument on the command line
+
 0.4.0 (2020-08-03)
 ------------------
 * python3 and noetic upgrades

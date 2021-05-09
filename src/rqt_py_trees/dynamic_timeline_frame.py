@@ -30,7 +30,6 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-
 from python_qt_binding.QtCore import qDebug, QPointF, QRectF, Qt, qWarning, Signal
 from python_qt_binding.QtGui import QBrush, QCursor, QColor, QFont, \
                                     QFontMetrics, QPen, QPolygonF
@@ -39,6 +38,7 @@ try:  # indigo
 except ImportError:  # kinetic+ (pyqt5)
     from python_qt_binding.QtWidgets import QGraphicsItem
 
+import sys
 import rospy
 import bisect
 import threading
@@ -307,6 +307,8 @@ class DynamicTimelineFrame(QGraphicsItem):
             trimmed = ''
             split_name = topic_name.split('/')
             split_name = filter(lambda a: a != '', split_name)
+            if sys.version_info[0] > 2:
+                split_name = [n for n in split_name]
             #  Save important last element of topic name provided it is small
             popped_last = False
             if self._qfont_width(split_name[-1]) < .5 * allowed_width:
