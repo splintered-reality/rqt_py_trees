@@ -135,6 +135,7 @@ class RosBehaviourTree(QObject):
         self.current_topic = None
         self.behaviour_sub = None
         self._tip_message = None  # message of the tip of the tree
+        self._default_topic = parsed_args.topic  # topic parsed on the command line
         self._saved_settings_topic = None  # topic subscribed to by previous instance
         self.visibility_level = py_trees.common.VisibilityLevel.DETAIL
 
@@ -193,7 +194,8 @@ class RosBehaviourTree(QObject):
         self._combo_event_filter = RosBehaviourTree.ComboBoxEventFilter(self._refresh_combo)
         self._widget.topic_combo_box.installEventFilter(self._combo_event_filter)
         self._widget.topic_combo_box.activated.connect(self._choose_topic)
-        self._update_combo_topics()
+        # Delay populating the combobox, let restore_settings() handle it
+        # self._update_combo_topics()
 
         # Set up navigation buttons
         self._widget.previous_tool_button.pressed.connect(self._previous)
@@ -309,6 +311,7 @@ class RosBehaviourTree(QObject):
         operate_object.add_argument('--bag-dir', action='store', help='Specify the directory in which to look for bag files. The default is $ROS_HOME/behaviour_trees, if $ROS_HOME is set, or ~/.ros/behaviour_trees otherwise.')
         operate_object.add_argument('-m', '--by-time', action='store_true', help='The latest bag is defined by the time at which the file was last modified, rather than the date and time specified in the filename.')
         operate_object.add_argument(RosBehaviourTree.no_roscore_switch, action='store_true', help='Run the viewer without roscore. It is only possible to view bag files if this is set.')
+        operate_object.add_argument('--topic', action='store', type=str, default=None, help='Default topic to defer to [default:None]')
 
     def open_latest_bag(self, bag_dir, by_time=False):
         """Open the latest bag in the given directory
@@ -389,8 +392,10 @@ class RosBehaviourTree(QObject):
         Update the topics displayed in the combo box that the user can use to select
         which topic they want to listen on for trees, filtered so that only
         topics with the correct message type are shown.
+
+        This method is triggered on startup and on user combobox interactions
         """
-        # Only update topics if we're running with live updating
+        # Only update topics if we're running with live update (i.e. with roscore)
         if not self.live_update:
             self._widget.topic_combo_box.setEnabled(False)
             return
@@ -403,20 +408,45 @@ class RosBehaviourTree(QObject):
             if topic_type == RosBehaviourTree._expected_type:
                 valid_topics.append(topic_path)
 
-        if not valid_topics:
+        # Populate the combo-box
+        if self._default_topic is not None and self._default_topic not in valid_topics:
+            self._widget.topic_combo_box.addItem(self._default_topic)
+        self._widget.topic_combo_box.addItems(valid_topics)
+        if self._default_topic is None and self._saved_settings_topic is not None:
+            self._widget.topic_combo_box.addItem(self._saved_settings_topic)
+        if self._default_topic is None and not valid_topics and self._saved_settings_topic is None:
             self._widget.topic_combo_box.addItem(RosBehaviourTree._empty_topic)
+            
+        # Initialise it with a topic, priority given to:
+        #  1) command line choice, i.e. self._default_topic whether
+        #     regardless of whether it exists or not
+        #  2) the valid topic if only one exists
+        #  3) the valid topic that is also in saved settings if more than one exists
+        #  4) the first valid topic in the list
+        #  5) the saved topic if no valid topics exist
+        #  6) the empty topic if no valid topics exist and no saved topic exists
+        # For each choice except 6), set as current with a subscriber.
+        if self.current_topic is None:
+            if self._default_topic is not None:
+                topic = self._default_topic
+            elif len(valid_topics) == 1:
+                topic = valid_topics[0]
+            elif valid_topics:
+                if self._saved_settings_topic in valid_topics:
+                    topic = self._saved_settings_topic
+                else:
+                    topic = valid_topics[0]
+            elif self._saved_settings_topic is not None:
+                topic = self._saved_settings_topic
+            else:
+                topic = None
+            if topic is not None:
+                for index in range(self._widget.topic_combo_box.count()):
+                    if topic == self._widget.topic_combo_box.itemText(index):
+                        self._widget.topic_combo_box.setCurrentIndex(index)
+                        self._choose_topic(topic)
+                        break
             return
-
-        # always add an item which does nothing so that it is possible to listen to nothing.
-        self._widget.topic_combo_box.addItem(RosBehaviourTree._unselected_topic)
-        for topic in valid_topics:
-            self._widget.topic_combo_box.addItem(topic)
-            # if the topic corresponds to the one that was active the last time
-            # the viewer was run, automatically set that one as the one we look
-            # at
-            if topic == self._saved_settings_topic:
-                self._widget.topic_combo_box.setCurrentIndex(self._widget.topic_combo_box.count() - 1)
-                self._choose_topic(self._widget.topic_combo_box.currentIndex())
 
     def _set_timeline_buttons(self, first_snapshot=None, previous_snapshot=None, next_snapshot=None, last_snapshot=None):
         """
