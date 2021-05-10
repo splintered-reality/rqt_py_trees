@@ -107,6 +107,15 @@ class NodeItem(GraphItem):
                                       QPointF(rect[0] + rect[2], rect[1] + rect[3] / 5)])
             self._graphics_item = QGraphicsPolygonItem(note_polygon)
 
+        elif shape == 'invhouse':
+            rect = bounding_box.getRect()
+            invhouse_polygon = QPolygonF([QPointF(rect[0], rect[1]),
+                                          QPointF(rect[0], rect[1] + 3 * rect[3] / 4),
+                                          QPointF(rect[0] + rect[2]/2, rect[1] + rect[3]),
+                                          QPointF(rect[0] + rect[2], rect[1] + 3 * rect[3] / 4),
+                                          QPointF(rect[0] + rect[2], rect[1])])
+            self._graphics_item = QGraphicsPolygonItem(invhouse_polygon)
+
         else:
             self._graphics_item = QGraphicsEllipseItem(bounding_box)
         self.addToGroup(self._graphics_item)
